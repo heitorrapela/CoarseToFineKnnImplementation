@@ -1,6 +1,11 @@
-# PCA in Wine implementation with KNN
+# Coarse to fine KNN - Machine Learning Project - CIn/UFPE
+# Members:
+# Gabriel de França Medeiros
+# Gabriel Marques Bandeira
+# Heitor Rapela Medeiros 
+
 import numpy as np
-# import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 import pandas as pd
 import timeit
 import plotly.plotly as py
@@ -9,31 +14,32 @@ import plotly.tools as tls
 from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsClassifier
 
+# Separate data from breastTissue dataset
 def separateData(data):
 	# y = Class 
 	y = data.ix[:,0].values
-	# X = Data split in att ; Matrix : qtdElement x att (133 x 13)
+	# X = Data split in att ; Matrix : qtdElement x att
 	X = data.ix[:,1:att+1].values
 	X_std = StandardScaler().fit_transform(X)
 
 	return y,X,X_std
-	
 
+################## Data pre-processing ###########################
+# Breast Tissue DataBase
+# Class quantity
+numCat = 6
 # Number of attributes = 9
 att = 9
-# Class quantity
-numCat = 6  
 
-mi = 0.15
-
-# Breast Tissue DataBase
-#data = pd.read_excel("breastTissue/BreastTissue.xls", sheetname=0)
+# Open data file
 data = pd.ExcelFile("breastTissue/BreastTissue.xls")
 data.sheet_names
 
+# Open data training set in pandas frame
 dataTraining = data.parse("Training")
 dataTraining.head()
 
+# Open data test set in pandas frame
 dataTest = data.parse("Test")
 dataTest.head()
 
@@ -43,6 +49,17 @@ class_label_tranning, X_semStd, X = separateData(dataTraining)
 # Separate Test Data #
 class_label_test, Y_semStd, Y = separateData(dataTest)
 
+################## CFKNNC implementation #########################
+# N value of CFKNNC : K <= N
+N = 10
+
+# K value of CFKNNC : K <= N
+K = 5
+
+# mi : constant value in CFKNNC
+mi = 0.15
+
+###################################################################
 Y = Y[0]
 print Y
 Y = np.array([Y])
