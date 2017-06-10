@@ -1,6 +1,6 @@
 # Coarse to fine KNN - Machine Learning Project - CIn/UFPE
 # Members:
-# Gabriel de França Medeiros
+# Gabriel de Franca Medeiros
 # Gabriel Marques Bandeira
 # Heitor Rapela Medeiros 
 
@@ -60,35 +60,35 @@ K = 5
 mi = 0.15
 
 ###################################################################
+# The notation used in the article is transpose of our database
+# so att : its lines and the instace : its columns, so we need to transpose
+# our data
+
+# Get one instance of the test from db
+# ps: we need to change for a loop (for) in numbers of test instance
 Y = Y[0]
-print Y
+print Y.shape
+# Y shape : (att,) change to (1,att) 
 Y = np.array([Y])
-print Y
-print Y.shape
+# Convert Y shape to (att,1), article representation of data
+Y = Y.T
 
-print X.shape
+# Convert our database representation to article representation (Transpose input data) 
+# Matrix our representation: (instance,att)
+# Article representation: (att, instance) 
+X = X.T
+
+# Calculate XT 
 XT = X.T
+# Calculate XT*X
 XTX = np.dot(XT,X)
-print XTX.shape
+# Calculate I, same dimension of XT*X lines
 I = np.identity(XTX.shape[0])
+# Calculate mi*I
 miI = mi*I
-print (XTX + miI).shape
+# Calculate inverse of (XT*X + mi*I)
 invs = np.linalg.inv(XTX + miI)
-print "inv: ", invs.shape
+# Calculate power((XT*X + mi*I),-1)*XT
 invsXT = np.dot(invs,XT)
-print invsXT.shape
-print "XT: ", XT.shape
-print Y.shape
-
-#gamma = np.dot(invsXT,Y)
-#print gamma
-#print X.shape
-
-'''
-print X[0:2]
-print X.shape
-print X.T[0:2]
-print X.T.shape
-print np.dot(X,X.T)[0:2]
-print np.dot(X,X.T).shape
-'''
+# Calculate gamma = power((XT*X + mi*I),-1)*XT*Y
+gamma = np.dot(invsXT,Y)
