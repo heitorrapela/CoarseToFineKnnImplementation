@@ -80,75 +80,84 @@ class_label_tranning, X_semStd, X = separateData(dataTraining)
 # Separate Test Data #
 class_label_test, Y_semStd, Y = separateData(dataTest)
 
-################## CFKNNC implementation #########################
-# N value of CFKNNC : K <= N
-N = 50
-
-# K value of CFKNNC : K <= N
-K = 5
-
-# mi : constant value in CFKNNC
-mi = 0.01
-
 ###################################################################
 # The notation used in the article is transpose of our database
 # so att : its lines and the instace : its columns, so we need to transpose
 # our data
-
 # Convert our database representation to article representation (Transpose input data) 
 # Matrix our representation: (instance,att)
 # Article representation: (att, instance) 
 X = X.T
 
+################## CFKNNC implementation #########################
+# N value of CFKNNC : K <= N
+N = [10,20,30,40,50,60,70]
+
+# K value of CFKNNC : K <= N
+K = range(1,10)
+
+# mi : constant value in CFKNNC
+mi = 0.01
+
+best_option = [0, N[0], K[0]]
+
 # Calculate power((XT*X + mi*I),-1)*XT
 invsXT = calculate_invs_xt(X)
 
-# Iterate test set
-y_class = []
-# Get each instance of the test from db
-for y in Y:
-	# Y shape : (att,) change to (1,att) 
-	y = np.array([y])
-	# Convert Y shape to (att,1), article representation of data
-	y = y.T
+for n in N:
+	for k in K:
+		# Iterate test set
+		y_class = []
+		# Get each instance of the test from db
+		for y in Y:
+			# Y shape : (att,) change to (1,att) 
+			y = np.array([y])
+			# Convert Y shape to (att,1), article representation of data
+			y = y.T
 
-	# Calculate gamma = power((XT*X + mi*I),-1)*XT*Y
-	gamma = np.dot(invsXT,y)
+			# Calculate gamma = power((XT*X + mi*I),-1)*XT*Y
+			gamma = np.dot(invsXT,y)
 
-	error_y = []
-	for i in range(len(gamma)):
-		error_y.append(np.linalg.norm(y[:,0]-gamma[i][0]*X[:,i].T))
-	
-	indexes = np.array(range(len(error_y)))
-	t = np.c_[indexes, error_y]
-	error_y_ord = np.array(sorted(t, key=lambda a_entry: a_entry[1]))
-	Z = X[:, error_y_ord[0:N, 0].astype(int)]
-	class_z = class_label_tranning[error_y_ord[0:N, 0].astype(int)]
+			error_y = []
+			for i in range(len(gamma)):
+				error_y.append(np.linalg.norm(y[:,0]-gamma[i][0]*X[:,i].T))
+			
+			indexes = np.array(range(len(error_y)))
+			t = np.c_[indexes, error_y]
+			error_y_ord = np.array(sorted(t, key=lambda a_entry: a_entry[1]))
+			Z = X[:, error_y_ord[0:n, 0].astype(int)]
+			class_z = class_label_tranning[error_y_ord[0:n, 0].astype(int)]
 
-	new_gamma = calculate_gamma(Z, y)
-	error_y = []
-	for i in range(len(new_gamma)):
-		error_y.append(np.linalg.norm(y[:,0]-new_gamma[i][0]*Z[:,i].T))
-	indexes = np.array(range(len(error_y)))
-	t = np.c_[indexes, error_y]
-	error_y_ord = np.array(sorted(t, key=lambda a_entry: a_entry[1]))
-	print error_y_ord
-	print class_z
-	classes = class_z[error_y_ord[0:K, 0].astype(int)]
+			new_gamma = calculate_gamma(Z, y)
+			error_y = []
+			for i in range(len(new_gamma)):
+				error_y.append(np.linalg.norm(y[:,0]-new_gamma[i][0]*Z[:,i].T))
+			indexes = np.array(range(len(error_y)))
+			t = np.c_[indexes, error_y]
+			error_y_ord = np.array(sorted(t, key=lambda a_entry: a_entry[1]))
+			# print error_y_ord
+			# print class_z
+			classes = class_z[error_y_ord[0:k, 0].astype(int)]
 
-	print classes
-	data = Counter(classes)
-	print data.most_common(4)
-	y_class.append(data.most_common(1)[0][0])
+			# print classes
+			data = Counter(classes)
+			# print data.most_common(4)
+			y_class.append(data.most_common(1)[0][0])
 
-ok = 0
-for i in range(len(class_label_test)):
-	print "Y: " + str(class_label_test[i]) + "; identificado como " + str(y_class[i])
-	if class_label_test[i] == y_class[i]:
-		ok = ok + 1
+		ok = 0
+		for i in range(len(class_label_test)):
+			# print "Y: " + str(class_label_test[i]) + "; identificado como " + str(y_class[i])
+			if class_label_test[i] == y_class[i]:
+				ok = ok + 1
 
-print "Taxa: " + str(float(ok)/len(class_label_test)*100) + "%"
+		taxa = float(ok)/len(class_label_test)*100
+		if taxa > best_option[0]:
+			best_option[0] = taxa
+			best_option[1] = n
+			best_option[2] = k
+		print "N = " +str(n) + "; K = " + str(k) + "\tTaxa: " + str(taxa) + "%"
 
+print 'Best option: ' + str(best_option[0]) + '%   -   N = ' + str(best_option[1]) + '; K = ' + str(best_option[2])
 # # Passos:
 # 1) ordenar o gamma e salvando a posicao, pq ele eh a nova distancia (como se fosse a euclideana)
 # 2) pegar os n menores, e calcular a funcao de erro la (eu nao lembro pra que a gente vai usar a funcao de erro)
