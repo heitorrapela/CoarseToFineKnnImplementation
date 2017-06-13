@@ -15,6 +15,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsClassifier
 from collections import Counter
 
+
 # Separate data from breastTissue dataset
 def separateData(data):
 	# y = Class 
@@ -25,7 +26,19 @@ def separateData(data):
 
 	return y,X,X_std
 
+
+# Calculate gamma = power((XT*X + mi*I),-1)*XT*Y
 def calculate_gamma(X, Y):
+	# Calculate power((XT*X + mi*I),-1)*XT
+	invsXT = calculate_invs_xt(X)
+	# Calculate gamma = power((XT*X + mi*I),-1)*XT*Y
+	gamma = np.dot(invsXT,Y)
+
+	return gamma
+
+
+# Calculate power((XT*X + mi*I),-1)*XT
+def calculate_invs_xt(X):
 	# Calculate XT 
 	XT = X.T
 	# Calculate XT*X
@@ -38,10 +51,9 @@ def calculate_gamma(X, Y):
 	invs = np.linalg.inv(XTX + miI)
 	# Calculate power((XT*X + mi*I),-1)*XT
 	invsXT = np.dot(invs,XT)
-	# Calculate gamma = power((XT*X + mi*I),-1)*XT*Y
-	gamma = np.dot(invsXT,Y)
 
-	return gamma
+	return invsXT
+
 
 ################## Data pre-processing ###########################
 # Breast Tissue DataBase
@@ -70,13 +82,13 @@ class_label_test, Y_semStd, Y = separateData(dataTest)
 
 ################## CFKNNC implementation #########################
 # N value of CFKNNC : K <= N
-N = 10
+N = 50
 
 # K value of CFKNNC : K <= N
 K = 5
 
 # mi : constant value in CFKNNC
-mi = 0.15
+mi = 0.01
 
 ###################################################################
 # The notation used in the article is transpose of our database
@@ -88,26 +100,13 @@ mi = 0.15
 # Article representation: (att, instance) 
 X = X.T
 
-# Calculate XT 
-XT = X.T
-# Calculate XT*X
-XTX = np.dot(XT,X)
-# Calculate I, same dimension of XT*X lines
-I = np.identity(XTX.shape[0])
-# Calculate mi*I
-miI = mi*I
-# Calculate inverse of (XT*X + mi*I)
-invs = np.linalg.inv(XTX + miI)
 # Calculate power((XT*X + mi*I),-1)*XT
-invsXT = np.dot(invs,XT)
+invsXT = calculate_invs_xt(X)
 
-# iterate test set
+# Iterate test set
 y_class = []
+# Get each instance of the test from db
 for y in Y:
-	# Get one instance of the test from db
-	# ps: we need to change for a loop (for) in numbers of test instance
-	# Y = Y[0]
-	# print y.shape
 	# Y shape : (att,) change to (1,att) 
 	y = np.array([y])
 	# Convert Y shape to (att,1), article representation of data
@@ -123,8 +122,6 @@ for y in Y:
 	indexes = np.array(range(len(error_y)))
 	t = np.c_[indexes, error_y]
 	error_y_ord = np.array(sorted(t, key=lambda a_entry: a_entry[1]))
-	# print error_y_ord.shape
-	# print error_y_ord[0,:]
 	Z = X[:, error_y_ord[0:N, 0].astype(int)]
 	class_z = class_label_tranning[error_y_ord[0:N, 0].astype(int)]
 
@@ -147,8 +144,6 @@ for y in Y:
 ok = 0
 for i in range(len(class_label_test)):
 	print "Y: " + str(class_label_test[i]) + "; identificado como " + str(y_class[i])
-	# print class_label_test[i]
-	# print y_class[i]
 	if class_label_test[i] == y_class[i]:
 		ok = ok + 1
 
