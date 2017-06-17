@@ -25,12 +25,17 @@ def separateData(data):
 
 	return y,X,X_std
 
-# mi : elements of Real Numbers
+# mi : Element of Real Numbers
 def calculate_mi(x1,x2,x):
 	aux1 = np.dot(x-x1,x2-x1)
 	aux2 = np.dot(x2-x1,x2-x1) 
 	mi = aux1/float(aux2)
 	return mi
+
+# p : projection point of x in x1x2
+def calculate_p(x1,x2,mi):
+	p = x1 + mi*(x2-x1)
+	return p
 
 ################## Data pre-processing ###########################
 # Breast Tissue DataBase
@@ -71,8 +76,8 @@ x2 = np.asarray([1,1,1])
 x =  np.asarray([0,1,3])
 
 mi = calculate_mi(x1,x2,x)
-print mi
-
+p = calculate_p(x1,x2,mi)
+print p
 #ans = calculate_nfl(x1,x2,x)
 # mi : elements of Real Numbers
 # px is perpendicular to x2x1, so mi
