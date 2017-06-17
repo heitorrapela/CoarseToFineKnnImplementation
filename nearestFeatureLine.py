@@ -25,6 +25,12 @@ def separateData(data):
 
 	return y,X,X_std
 
+# mi : elements of Real Numbers
+def calculate_mi(x1,x2,x):
+	aux1 = np.dot(x-x1,x2-x1)
+	aux2 = np.dot(x2-x1,x2-x1) 
+	mi = aux1/float(aux2)
+	return mi
 
 ################## Data pre-processing ###########################
 # Breast Tissue DataBase
@@ -58,8 +64,16 @@ class_label_test, Y_semStd, Y = separateData(dataTest)
 # Convert our database representation to article representation (Transpose input data) 
 # Matrix our representation: (instance,att)
 # Article representation: (att, instance) 
-X = X.T
+#X = X.T
 
+x1 = np.asarray([0,0,0])
+x2 = np.asarray([1,1,1])
+x =  np.asarray([0,1,3])
+
+mi = calculate_mi(x1,x2,x)
+print mi
+
+#ans = calculate_nfl(x1,x2,x)
 # mi : elements of Real Numbers
 # px is perpendicular to x2x1, so mi
 #mi = ((x-x1)*(x2-x1))/((x2-x1)*(x2-x1))
