@@ -13,7 +13,7 @@ import timeit
 from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsClassifier
 from collections import Counter
-
+from numpy import linalg as LA
 
 # Separate data from breastTissue dataset
 def separateData(data):
@@ -36,6 +36,15 @@ def calculate_mi(x1,x2,x):
 def calculate_p(x1,x2,mi):
 	p = x1 + mi*(x2-x1)
 	return p
+
+def calculate_distance_x1x2(x,p):
+	return LA.norm(x-p)
+
+def distance_nearestFeatureLine(x1,x2,x):
+	mi = calculate_mi(x1,x2,x)
+	p = calculate_p(x1,x2,mi)
+	dist = calculate_distance_x1x2(x,p)
+	return dist
 
 ################## Data pre-processing ###########################
 # Breast Tissue DataBase
@@ -74,14 +83,8 @@ class_label_test, Y_semStd, Y = separateData(dataTest)
 x1 = np.asarray([0,0,0])
 x2 = np.asarray([1,1,1])
 x =  np.asarray([0,1,3])
+print distance_nearestFeatureLine(x1,x2,x)
 
-mi = calculate_mi(x1,x2,x)
-p = calculate_p(x1,x2,mi)
-print p
 #ans = calculate_nfl(x1,x2,x)
-# mi : elements of Real Numbers
-# px is perpendicular to x2x1, so mi
-#mi = ((x-x1)*(x2-x1))/((x2-x1)*(x2-x1))
-#p = x1 + mi*(x2-x1)
 #d(x,x1x2) = norm(x-p)
 
