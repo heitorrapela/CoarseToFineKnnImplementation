@@ -73,11 +73,13 @@ sortedByClassTrainingData = []
 for n_class in range(0,numCat):
 	sortedByClassTrainingData.append(dataTraining[dataTraining["Class"] == n_class])
 
+K = range(1,10)
+K_rate = [0,0,0,0,0,0,0,0,0,0]
+
 # Separate Test Data #
 class_label_test, Y_semStd, Y = separateData(dataTest)
-
+counter = 0
 # Get each instance of the test from db
-start = time.time()
 for x in Y:
 	# Y shape : (att,) change to (1,att) 
 	x = np.array([x])
@@ -93,30 +95,18 @@ for x in Y:
 					dist_aux = distance_nearestFeatureLine(x1,x2,x)
 					dist.append([class_label_tranning[0],dist_aux])
 	dist_ = sorted(dist, key=lambda x: x[1])
-	print dist_
-	print ""
-	print ""
-	'''
-	dataSorted= sorted(dataZipped, key=lambda x: x[1])
-    dataBiggest = dataSorted[-n_biggest:]
-    # ans = [[filterIndex][weights]]
-    ans = [list(t) for t in zip(*dataBiggest)]
-	'''
-
-elapsed = time.time() - start
-print elapsed
-
-
-
-
-###################################################################
-# x1 : one instance of same class x
-# x2 : another instace of same class of x
-x1 = np.asarray([0,0,0])
-x2 = np.asarray([1,1,1])
-x =  np.asarray([0,1,3])
-#print distance_nearestFeatureLine(x1,x2,x)
-
-#ans = calculate_nfl(x1,x2,x)
-#d(x,x1x2) = norm(x-p)
-
+	
+	for k in range(len(K)):
+		#get the k first elements in the list
+		aux_ar = dist_[:k+1]
+		#get the classes
+		classes = [x[0] for x in aux_ar]
+		classes = np.array(classes)
+		#get the most common class in the array
+		counts = np.bincount(classes)
+		result = np.argmax(counts)
+		#compare with the known class
+		if result == class_label_test[counter]:
+			K[k] = K[k] + 1
+#calculating the rate 
+print [x/float(len(Y)) for x in K]
