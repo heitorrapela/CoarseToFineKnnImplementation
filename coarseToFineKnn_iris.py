@@ -161,5 +161,11 @@ y = taxa
 title = 'CFKNNC - K: ' + str(K[0]) + ''
 py.offline.plot({
 		"data": [Scatter(x=x, y=y)],
-		"layout": Layout(title=title)
+		"layout": Layout(title=title,
+						yaxis=dict(range=[0, 100],
+									title='%'),
+						xaxis=dict(title='N')
+						)
 	})
+
+# 001_l_460_01.jpg

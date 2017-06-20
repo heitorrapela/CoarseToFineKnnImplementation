@@ -155,3 +155,16 @@ for n in N:
 		print "N = " +str(n) + "; K = " + str(k) + "\tTaxa: " + str(taxa) + "%"
 
 print 'Best option: ' + str(best_option[0]) + '%   -   N = ' + str(best_option[1]) + '; K = ' + str(best_option[2])
+x = N
+y = taxa
+title = 'CFKNNC - K: ' + str(K[0]) + ''
+py.offline.plot({
+		"data": [Scatter(x=x, y=y)],
+		"layout": Layout(title=title,
+						yaxis=dict(range=[0, 100],
+									title='%'),
+						xaxis=dict(title='N')
+						)
+	})
+
+# 001_l_460_01.jpg
