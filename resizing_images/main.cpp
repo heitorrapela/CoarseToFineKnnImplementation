@@ -17,7 +17,7 @@ int main()
         std::cout << "Image counter: " << std::to_string(imgCounter++);
         std::string imgName, outImgName;
         imgName = it.next().toStdString();
-        outImgName = "output" + imgName.substr(imgName.find('/'), imgName.rfind(".")-imgName.find('/')) + "-resized.jpg";
+        outImgName = "output" + imgName.substr(imgName.find('/'), imgName.rfind(".")-imgName.find('/')) + ".jpg";
         std::cout << "\t" << imgName << " -> " << outImgName;
         cv::Mat image;
         image = cv::imread(imgName);   // Read the file

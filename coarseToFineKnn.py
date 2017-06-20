@@ -98,7 +98,7 @@ X = X.T
 N = [10,20,30,40,50,60,70]
 
 # K value of CFKNNC : K <= N
-K = [1]
+K = [5]
 
 # mi : constant value in CFKNNC
 mi = 0.01
@@ -164,6 +164,11 @@ y = taxa
 title = 'CFKNNC - K: ' + str(K[0]) + ''
 py.offline.plot({
 		"data": [Scatter(x=x, y=y)],
-		"layout": Layout(title=title)
+		"layout": Layout(title=title,
+						yaxis=dict(range=[0, 100],
+									title='%'),
+						xaxis=dict(title='N')
+						)
 	})
 
+# 001_l_460_01.jpg
