@@ -52,12 +52,13 @@ def calculate_invs_xt(X):
 ################## Data pre-processing ###########################
 # Multispectral Palm Print DataBase
 # Class quantity
-numCat = 100
+numCat = 312
 # Number of attributes = 400
 att = 400
 
 # Open data file
-path = '/home/bandeira/Documents/ufpe/am/projeto/CoarseToFineKnnImplementation/multispectral palmprint/'
+# path = '/home/bandeira/Documents/ufpe/am/projeto/CoarseToFineKnnImplementation/multispectral palmprint/'
+path = '/home/bandeira/Documents/ufpe/am/projeto/CASIA-PM-V1-resized/'
 files = []
 labels = []
 datas = []
@@ -91,7 +92,7 @@ X = X.T
 N = [10,20,30,40,50,60,70]
 
 # K value of CFKNNC : K <= N
-K = [1]
+K = [1, 5, 7]
 
 # mi : constant value in CFKNNC
 mi = 0.01
@@ -140,7 +141,7 @@ for n in N:
 
         ok = 0
         for i in range(len(class_label_test)):
-            print "Y label: " + str(class_label_test[i]) + "; identified as " + str(y_class[i])
+            # print "Y label: " + str(class_label_test[i]) + "; identified as " + str(y_class[i])
             if class_label_test[i] == y_class[i]:
                 ok = ok + 1
 

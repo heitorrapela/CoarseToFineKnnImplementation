@@ -14,7 +14,7 @@ from PIL import Image
 import itertools
 
 
-# Separate data from multispectral palmprint dataset
+# Separate data from palmprint dataset
 def get_x_std(X):
     return StandardScaler().fit_transform(X)
 
@@ -50,12 +50,13 @@ def distance_nearestFeatureLine(x1, x2, x):
 ################## Data pre-processing ###########################
 # Multispectral Palm Print DataBase
 # Class quantity
-numCat = 100
+numCat = 320
 # Number of attributes = 400
 att = 400
 
 # Open data file
-path = '/home/bandeira/Documents/ufpe/am/projeto/CoarseToFineKnnImplementation/multispectral palmprint/'
+# path = '/home/bandeira/Documents/ufpe/am/projeto/CoarseToFineKnnImplementation/multispectral palmprint/'
+path = '/home/bandeira/Documents/ufpe/am/projeto/CASIA-PM-V1-resized/'
 files = []
 labels = []
 datas = []
@@ -93,15 +94,16 @@ for x in Y:
     dist = []
     for c in range(0, numCat):
         aux = sortedByClassTrainingData[c]
-        class_label_tranning = c
-        Aux = get_x_std(aux)
-        teste = list(itertools.product(Aux, Aux))
+        if len(aux) > 0:
+            class_label_tranning = c
+            Aux = get_x_std(aux)
+            teste = list(itertools.product(Aux, Aux))
 
-        for v in range(0, len(teste)):
-            x1 = np.asarray(teste[v][0])
-            x2 = np.asarray(teste[v][1])
-            dist_aux = distance_nearestFeatureLine(x1, x2, x)
-            dist.append([c, dist_aux])
+            for v in range(0, len(teste)):
+                x1 = np.asarray(teste[v][0])
+                x2 = np.asarray(teste[v][1])
+                dist_aux = distance_nearestFeatureLine(x1, x2, x)
+                dist.append([c, dist_aux])
     dist_ = sorted(dist, key=lambda x: x[1])
 
     for k in range(len(K)):
