@@ -144,24 +144,3 @@ for x in Y:
 
 #calculating the rate 
 print [x/float(len(Y)) for x in K]
-
-
-
-
-# elapsed = time.time() - start
-# print elapsed
-
-
-
-
-###################################################################
-# x1 : one instance of same class x
-# x2 : another instace of same class of x
-x1 = np.asarray([0,0,0])
-x2 = np.asarray([1,1,1])
-x =  np.asarray([0,1,3])
-#print distance_nearestFeatureLine(x1,x2,x)
-
-#ans = calculate_nfl(x1,x2,x)
-#d(x,x1x2) = norm(x-p)
-
