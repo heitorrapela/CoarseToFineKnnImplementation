@@ -155,20 +155,3 @@ for n in N:
 		print "N = " +str(n) + "; K = " + str(k) + "\tTaxa: " + str(taxa) + "%"
 
 print 'Best option: ' + str(best_option[0]) + '%   -   N = ' + str(best_option[1]) + '; K = ' + str(best_option[2])
-# # Passos:
-# 1) ordenar o gamma e salvando a posicao, pq ele eh a nova distancia (como se fosse a euclideana)
-# 2) pegar os n menores, e calcular a funcao de erro la (eu nao lembro pra que a gente vai usar a funcao de erro)
-# 3) repetir os mesmos calculos que foram feitos para o gamma, para o segundo filtro (acho que eh Z agora)
-# 4) fazer o mesmo passo que 1) e 2), pegando os k menores
-# 5) pronto, temos nossa representacao do caso de teste, pelos k prototipos mais proximos, podemos agora usar o knn e comparar a label correta                        
-# 6) testar com dois bancos do UCI, junto com os KNN e suas implementacoes
-# 7) testar com os datasets propostos pelo cara
-# 
-# #Dificuldade:
-# 1) eh o mais chato, e que perde mais tempo
-# 2) facil, so da um sort e selecionar os n menores
-# 3) ja foi feito no codigo, so criar uma funcao e colocar o codigo ja implementado, pq esse novo filtro eh igual ao primeiro, so que so muda a entrada
-# 4) repetir os passos 1 e 2
-# 5) facil, so colocar num "for", pra pegar as varias entradas, pq so ta pegando a primeira
-# 6) Complicado, vamos ter que ver como implementar os outros KNN
-# 7) Complicado, arrumar e tratar a entrada pro codigo da gente

@@ -1,4 +1,4 @@
-# Center Based NN - Machine Learning Project - CIn/UFPE
+# Center Based NN - Wine Dataset- Machine Learning Project - CIn/UFPE
 # Members:
 # Gabriel de Franca Medeiros
 # Gabriel Marques Bandeira
@@ -16,7 +16,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from collections import Counter
 from numpy import linalg as LA
 
-# Separate data from breastTissue dataset
+# Separate data from Wine Dataset dataset
 def separateData(data):
 	# y = Class 
 	y = data.ix[:,0].values
@@ -76,7 +76,7 @@ for n_class in range(0, numCat):
 # Separate Test Data #
 class_label_test, Y_semStd, Y = separateData(dataTest)
 
-K = range(1,10)
+K = range(1,11)
 K_rate = [0,0,0,0,0,0,0,0,0,0]
 
 #print class_label_test
@@ -111,9 +111,9 @@ for x in Y:
 
 		#compare with the known class
 		if result == class_label_test[counter]:
-			K[k] = K[k] + 1
+			K_rate[k] = K_rate[k] + 1
 
 	counter = counter + 1
 
 #calculating the rate 
-print [x/float(len(Y)) for x in K]
+print [x/float(len(Y)) for x in K_rate]

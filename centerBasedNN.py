@@ -1,4 +1,4 @@
-# Nearest Feature Line - Machine Learning Project - CIn/UFPE
+# Center Based NN - Breast Tissue - Machine Learning Project - CIn/UFPE
 # Members:
 # Gabriel de Franca Medeiros
 # Gabriel Marques Bandeira
@@ -76,16 +76,10 @@ for n_class in range(0, numCat):
 	aux = dataTraining[dataTraining['Class'] == n_class].mean()
 	classesCenter.append(np.asarray(aux[1:len(aux)]))
 
-
-# print "Centros: ",  classesCenter
-# sortedByClassTrainingData = []
-# for n_class in range(0,numCat):
-# 	sortedByClassTrainingData.append(dataTraining[dataTraining["Class"] == n_class])
-
 # Separate Test Data #
 class_label_test, Y_semStd, Y = separateData(dataTest)
 
-K = range(1,10)
+K = range(1,11)
 K_rate = [0,0,0,0,0,0,0,0,0,0]
 
 print class_label_test
@@ -107,24 +101,7 @@ for x in Y:
 			x1 = Aux[i]
 			dist_aux = distance_nearestFeatureLine(x1, center,x)
 			dist.append([c, dist_aux])
-		# for i in range(len(Aux)):
-		# 	for j in range(len(Aux)):
-		# 		if((i != j) and (i < j)):
-		# 			x1 = Aux[i]
-		# 			x2 = Aux[j]	
-		# 			dist_aux = distance_nearestFeatureLine(x1,x2,x)
-		# 			dist.append([class_label_tranning[0],dist_aux])
 	dist_ = sorted(dist, key=lambda x: x[1])
-	# print dist_
-	# print ""
-	# print ""
-	'''
-	dataSorted= sorted(dataZipped, key=lambda x: x[1])
-    dataBiggest = dataSorted[-n_biggest:]
-    # ans = [[filterIndex][weights]]
-    ans = [list(t) for t in zip(*dataBiggest)]
-	'''
-
 
 	for k in range(len(K)):
 		#get the k first elements in the list
@@ -135,12 +112,9 @@ for x in Y:
 		#get the most common class in the array
 		counts = np.bincount(classes)
 		result = np.argmax(counts)
-
 		#compare with the known class
 		if result == class_label_test[counter]:
-			K[k] = K[k] + 1
-
+			K_rate[k] = K_rate[k] + 1
 	counter = counter + 1
-
 #calculating the rate 
-print [x/float(len(Y)) for x in K]
+print [x/float(len(Y)) for x in K_rate]

@@ -1,4 +1,4 @@
-# Nearest Feature Line - Machine Learning Project - CIn/UFPE
+# Nearest Feature Line - Iris Dataset- Machine Learning Project - CIn/UFPE
 # Members:
 # Gabriel de Franca Medeiros
 # Gabriel Marques Bandeira
@@ -18,7 +18,7 @@ from numpy import linalg as LA
 import itertools
 
 
-# Separate data from breastTissue dataset
+# Separate data from Iris dataset
 def separateData(data):
 	# y = Class 
 	y = data.ix[:,0].values
@@ -53,19 +53,19 @@ def distance_nearestFeatureLine(x1,x2,x):
 	return dist
 
 ################## Data pre-processing ###########################
-# Number of att = 13
+# Number of att = 4
 att = 4
 # Class quantity
 numCat = 3  
 
-# Data Base: Wine recognition data	- Class + 13 att	
+# Data Base: Wine recognition data	- Class + 4 att	
 dataTraining = pd.read_csv('iris/iris_train.txt', sep=",", header = None)
-# To help manipulate, my hashtable will be changed to 0 .. 12
+# To help manipulate
 dataTraining.columns = ["Class",0,1,2,3]
 
-# Data Base: Wine recognition data	- Class + 13 att	
+# Data Base: Wine recognition data	- Class + 4 att	
 dataTest = pd.read_csv('iris/iris_test.txt', sep=",", header = None)
-# To help manipulate, my hashtable will be changed to 0 .. 12
+# To help manipulate
 dataTest.columns = ["Class",0,1,2,3]
 
 sortedByClassTrainingData = []
