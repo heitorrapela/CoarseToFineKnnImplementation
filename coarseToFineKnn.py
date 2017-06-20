@@ -1,16 +1,20 @@
-# Coarse to fine KNN - Machine Learning Project - CIn/UFPE
+# Coarse to fine KNN Classifier - Machine Learning Project - CIn/UFPE
+#
 # Members:
-# Gabriel de Franca Medeiros
-# Gabriel Marques Bandeira
-# Heitor Rapela Medeiros 
+# Gabriel de Franca Medeiros (gfm@cin.ufpe.br)
+# Gabriel Marques Bandeira (gmb@cin.ufpe.br)
+# Heitor Rapela Medeiros (hrm@cin.ufpe.br)
+#
+# Based on Yong Xu algorithm proposed in http://dx.doi.org/10.1016/j.patrec.2013.01.028 (last acessed on 19/june/2017)
 
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import timeit
-#import plotly.plotly as py
-#from plotly.graph_objs import *
-#import plotly.tools as tls
+# import plotly.plotly as py
+import plotly as py
+from plotly.graph_objs import *
+import plotly.tools as tls
 from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsClassifier
 from collections import Counter
@@ -94,7 +98,7 @@ X = X.T
 N = [10,20,30,40,50,60,70]
 
 # K value of CFKNNC : K <= N
-K = range(1,10)
+K = [1]
 
 # mi : constant value in CFKNNC
 mi = 0.01
@@ -103,6 +107,7 @@ best_option = [0, N[0], K[0]]
 
 # Calculate power((XT*X + mi*I),-1)*XT
 invsXT = calculate_invs_xt(X)
+taxa = []
 
 for n in N:
 	for k in K:
@@ -135,43 +140,30 @@ for n in N:
 			indexes = np.array(range(len(error_y)))
 			t = np.c_[indexes, error_y]
 			error_y_ord = np.array(sorted(t, key=lambda a_entry: a_entry[1]))
-			# print error_y_ord
-			# print class_z
 			classes = class_z[error_y_ord[0:k, 0].astype(int)]
 
-			# print classes
 			data = Counter(classes)
-			# print data.most_common(4)
 			y_class.append(data.most_common(1)[0][0])
 
 		ok = 0
 		for i in range(len(class_label_test)):
-			# print "Y: " + str(class_label_test[i]) + "; identificado como " + str(y_class[i])
+			# print "Y label: " + str(class_label_test[i]) + "; identified as " + str(y_class[i])
 			if class_label_test[i] == y_class[i]:
 				ok = ok + 1
 
-		taxa = float(ok)/len(class_label_test)*100
-		if taxa > best_option[0]:
-			best_option[0] = taxa
+		taxa.append(float(ok)/len(class_label_test)*100)
+		if taxa[-1] > best_option[0]:
+			best_option[0] = taxa[-1]
 			best_option[1] = n
 			best_option[2] = k
-		print "N = " +str(n) + "; K = " + str(k) + "\tTaxa: " + str(taxa) + "%"
+		print "N = " +str(n) + "; K = " + str(k) + "\tTaxa: " + str(taxa[-1]) + "%"
 
 print 'Best option: ' + str(best_option[0]) + '%   -   N = ' + str(best_option[1]) + '; K = ' + str(best_option[2])
-# # Passos:
-# 1) ordenar o gamma e salvando a posicao, pq ele eh a nova distancia (como se fosse a euclideana)
-# 2) pegar os n menores, e calcular a funcao de erro la (eu nao lembro pra que a gente vai usar a funcao de erro)
-# 3) repetir os mesmos calculos que foram feitos para o gamma, para o segundo filtro (acho que eh Z agora)
-# 4) fazer o mesmo passo que 1) e 2), pegando os k menores
-# 5) pronto, temos nossa representacao do caso de teste, pelos k prototipos mais proximos, podemos agora usar o knn e comparar a label correta                        
-# 6) testar com dois bancos do UCI, junto com os KNN e suas implementacoes
-# 7) testar com os datasets propostos pelo cara
-# 
-# #Dificuldade:
-# 1) eh o mais chato, e que perde mais tempo
-# 2) facil, so da um sort e selecionar os n menores
-# 3) ja foi feito no codigo, so criar uma funcao e colocar o codigo ja implementado, pq esse novo filtro eh igual ao primeiro, so que so muda a entrada
-# 4) repetir os passos 1 e 2
-# 5) facil, so colocar num "for", pra pegar as varias entradas, pq so ta pegando a primeira
-# 6) Complicado, vamos ter que ver como implementar os outros KNN
-# 7) Complicado, arrumar e tratar a entrada pro codigo da gente
+x = N
+y = taxa
+title = 'CFKNNC - K: ' + str(K[0]) + ''
+py.offline.plot({
+		"data": [Scatter(x=x, y=y)],
+		"layout": Layout(title=title)
+	})
+

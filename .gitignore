@@ -1,0 +1,4 @@
+resizing_images/output/*.JPG
+resizing_images/output/*.jpg
+resizing_images/input/*.jpg
+resizing_images/input/*.JPG

@@ -1,0 +1,1 @@
+output folder. All JPG output will appear here

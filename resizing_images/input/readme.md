@@ -1,0 +1,1 @@
+input folder. Put all JPG input files here
