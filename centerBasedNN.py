@@ -140,6 +140,7 @@ for x in Y:
 		if result == class_label_test[counter]:
 			K[k] = K[k] + 1
 
+	counter = counter + 1
 
 #calculating the rate 
 print [x/float(len(Y)) for x in K]
