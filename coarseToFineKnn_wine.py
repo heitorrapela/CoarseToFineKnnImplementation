@@ -8,9 +8,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import timeit
-#import plotly.plotly as py
-#from plotly.graph_objs import *
-#import plotly.tools as tls
+import plotly as py
+from plotly.graph_objs import *
+import plotly.tools as tls
 from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsClassifier
 from collections import Counter
@@ -91,12 +91,13 @@ X = X.T
 N = [10,20,30,40,50,60,70]
 
 # K value of CFKNNC : K <= N
-K = range(1,10)
+K = [7]
 
 # mi : constant value in CFKNNC
 mi = 0.01
 
 best_option = [0, N[0], K[0]]
+taxa = []
 
 # Calculate power((XT*X + mi*I),-1)*XT
 invsXT = calculate_invs_xt(X)
@@ -132,27 +133,23 @@ for n in N:
 			indexes = np.array(range(len(error_y)))
 			t = np.c_[indexes, error_y]
 			error_y_ord = np.array(sorted(t, key=lambda a_entry: a_entry[1]))
-			# print error_y_ord
-			# print class_z
 			classes = class_z[error_y_ord[0:k, 0].astype(int)]
 
-			# print classes
 			data = Counter(classes)
-			# print data.most_common(4)
 			y_class.append(data.most_common(1)[0][0])
 
 		ok = 0
 		for i in range(len(class_label_test)):
-			# print "Y: " + str(class_label_test[i]) + "; identificado como " + str(y_class[i])
+			# print "Y label: " + str(class_label_test[i]) + "; identified as " + str(y_class[i])
 			if class_label_test[i] == y_class[i]:
 				ok = ok + 1
 
-		taxa = float(ok)/len(class_label_test)*100
-		if taxa > best_option[0]:
-			best_option[0] = taxa
+		taxa.append(float(ok)/len(class_label_test)*100)
+		if taxa[-1] > best_option[0]:
+			best_option[0] = taxa[-1]
 			best_option[1] = n
 			best_option[2] = k
-		print "N = " +str(n) + "; K = " + str(k) + "\tTaxa: " + str(taxa) + "%"
+		print "N = " +str(n) + "; K = " + str(k) + "\tTaxa: " + str(taxa[-1]) + "%"
 
 print 'Best option: ' + str(best_option[0]) + '%   -   N = ' + str(best_option[1]) + '; K = ' + str(best_option[2])
 x = N
